@@ -33,7 +33,7 @@ jobs:
 
       - name: Export static pages
         working-directory: site
-        run: bun run export
+        run: bun run ../src/cli/index.ts export --base=/vibeframe
 
       - uses: actions/configure-pages@v5
 

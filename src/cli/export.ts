@@ -30,6 +30,15 @@ import type { Route } from "../router/types.ts";
 
 const outDir = resolve("dist");
 
+/** Get base path from --base flag or VIBEFRAME_BASE env var */
+function getBasePath(): string {
+  const baseFlag = process.argv.find((a) => a.startsWith("--base="));
+  const base = baseFlag?.split("=")[1] ?? process.env.VIBEFRAME_BASE ?? "";
+  // Ensure it starts with / and doesn't end with /
+  if (!base) return "";
+  return "/" + base.replace(/^\/+|\/+$/g, "");
+}
+
 /** Create a fake request for running loaders at build time */
 function fakeRequest(path: string, params: Record<string, string> = {}): VibeframeRequest {
   const url = new URL(`http://localhost${path}`);
@@ -50,6 +59,7 @@ async function renderRoute(
   route: Route,
   path: string,
   params: Record<string, string> = {},
+  basePath: string = "",
 ): Promise<string> {
   const pageMod = await import(route.pagePath);
 
@@ -73,11 +83,20 @@ async function renderRoute(
   const title = props.title ?? "Vibeframe";
 
   const styles: string[] = [];
-  if (existsSync(resolve("public/app.css"))) {
-    styles.push("/app.css");
+  if (existsSync(resolve("public/app.css")) || existsSync(resolve("styles/app.css"))) {
+    styles.push(`${basePath}/app.css`);
   }
 
-  return wrapInDocument({ title, content, data: props, styles });
+  let html = wrapInDocument({ title, content, data: props, styles });
+
+  // Rewrite internal links to include base path
+  // Skip external URLs (//), already-prefixed paths, and stylesheet links (already handled above)
+  if (basePath) {
+    const escaped = basePath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    html = html.replace(new RegExp(`href="\\/(?!\\/)(?!${escaped.slice(1)})`, "g"), `href="${basePath}/`);
+  }
+
+  return html;
 }
 
 /** Write HTML to dist/<path>/index.html */
@@ -91,7 +110,9 @@ function writeHTML(urlPath: string, html: string) {
 }
 
 export async function exportSite() {
-  console.log("\n  Vibeframe export\n");
+  const basePath = getBasePath();
+  if (basePath) console.log(`\n  Vibeframe export (base: ${basePath})\n`);
+  else console.log("\n  Vibeframe export\n");
 
   // Clean dist/
   if (existsSync(outDir)) {
@@ -133,7 +154,7 @@ export async function exportSite() {
         }
 
         try {
-          const html = await renderRoute(route, urlPath, params);
+          const html = await renderRoute(route, urlPath, params, basePath);
           writeHTML(urlPath, html);
           console.log(`  ✓  ${urlPath}`);
           exported++;
@@ -145,7 +166,7 @@ export async function exportSite() {
       // Static route — render directly
       const urlPath = route.pattern;
       try {
-        const html = await renderRoute(route, urlPath);
+        const html = await renderRoute(route, urlPath, {}, basePath);
         writeHTML(urlPath, html);
         console.log(`  ✓  ${urlPath}`);
         exported++;
