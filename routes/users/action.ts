@@ -1,19 +1,19 @@
-import type { VibeframeRequest, ActionResult } from "../../src/types.ts";
+import { validate } from "../../src/validation.ts";
+import { z } from "zod";
 import { getDatabase } from "../../src/db/database.ts";
 import { users } from "./schema.ts";
 
-export async function action(req: VibeframeRequest): Promise<ActionResult> {
-  const form = await req.formData();
-  const name = form.get("name") as string;
-  const email = form.get("email") as string;
+export async function action(req: any) {
+  const { data, errors } = await validate(req, {
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email address"),
+  });
 
-  if (!name || !email) {
-    return { errors: { name: !name ? "Name is required" : "", email: !email ? "Email is required" : "" } };
-  }
+  if (errors) return { errors };
 
   try {
     const db = getDatabase();
-    db.insert(users).values({ name, email }).run();
+    db.insert(users).values({ name: data.name, email: data.email }).run();
     return { redirect: "/users" };
   } catch (err: any) {
     if (err.message?.includes("UNIQUE")) {

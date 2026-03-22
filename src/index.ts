@@ -30,6 +30,10 @@ export { Form, FieldError } from "./components/Form.tsx";
 // CSRF
 export { generateCSRFToken, validateCSRFToken } from "./db/csrf.ts";
 
+// Validation
+export { validate } from "./validation.ts";
+export { z } from "zod";
+
 // Preact re-exports for convenience
 export { h, Fragment } from "preact";
 export { useState, useEffect, useRef, useMemo, useCallback, useContext } from "preact/hooks";

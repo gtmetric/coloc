@@ -92,13 +92,21 @@ export default function ExamplePage({ title, items }: Props) {
 }
 ```
 
-With form handling:
+With form handling (built-in validation):
 
 ```tsx
 // routes/example/action.ts
+import { validate } from "vibeframe";
+import { z } from "vibeframe";
+
 export async function action(req) {
-  const form = await req.formData();
-  // process form...
+  const { data, errors } = await validate(req, {
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
+  });
+
+  if (errors) return { errors };
+  // data.name and data.email are fully typed
   return { redirect: "/example" };
 }
 ```

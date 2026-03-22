@@ -89,11 +89,20 @@ export type Props = Awaited<ReturnType<typeof loader>>;
 
   // action.ts
   if (hasAction) {
-    await Bun.write(join(targetDir, "action.ts"), `import { getDatabase } from "${dbImport}";
+    const validateImport = isLocal ? `${srcPrefix}/validation.ts` : "vibeframe";
+    const zodImport = isLocal ? "zod" : "vibeframe";
+
+    await Bun.write(join(targetDir, "action.ts"), `import { validate } from "${validateImport}";
+import { z } from "${zodImport}";
 
 export async function action(req: any) {
-  const form = await req.formData();
-  // TODO: process form data
+  const { data, errors } = await validate(req, {
+    name: z.string().min(1, "Name is required"),
+  });
+
+  if (errors) return { errors };
+
+  // data.name is typed as string
   return { redirect: "/${routePath.replace(/\[.*?\]/g, "")}" };
 }
 `);

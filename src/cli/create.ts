@@ -202,8 +202,17 @@ export default function ExamplePage({ title }) {
 
 \`\`\`tsx
 // routes/example/action.ts
+import { validate } from "vibeframe";
+import { z } from "vibeframe";
+
 export async function action(req) {
-  const form = await req.formData();
+  const { data, errors } = await validate(req, {
+    name: z.string().min(1, "Name is required"),
+    email: z.string().email("Invalid email"),
+  });
+
+  if (errors) return { errors };
+  // data.name and data.email are fully typed
   return { redirect: "/example" };
 }
 \`\`\`
