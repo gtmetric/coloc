@@ -63,7 +63,11 @@ async function buildDevClient() {
       .replace(/\[/g, "_")
       .replace(/\]/g, "_");
 
-    const relToHydrate = relative(entriesDir, resolve(projectRoot, "src/client/hydrate.ts"));
+    // Find hydrate.ts — either in local src/ (framework dev) or node_modules (installed)
+    const localHydrate = resolve(projectRoot, "src/client/hydrate.ts");
+    const installedHydrate = resolve(projectRoot, "node_modules/vibeframe/src/client/hydrate.ts");
+    const hydratePath = existsSync(localHydrate) ? localHydrate : installedHydrate;
+    const relToHydrate = relative(entriesDir, hydratePath);
     const relToPage = relative(entriesDir, route.pagePath);
 
     const entryContent = `import { hydrate } from "${relToHydrate}";\nimport Page from "${relToPage}";\nhydrate(Page, document.getElementById("__vibeframe"));\n`;

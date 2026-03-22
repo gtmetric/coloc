@@ -208,20 +208,19 @@ export async function action(req) {
 }
 \`\`\`
 
-### Database schema:
+### Database schema (Drizzle + SQLite):
 
 \`\`\`tsx
 // routes/items/schema.ts
-import { schema } from "vibeframe";
+import { sqliteTable, text, integer } from "vibeframe";
 
-interface Item { id: number; name: string; }
-export const Item = schema<Item>("items", {
-  id: "integer primary key autoincrement",
-  name: "text not null",
+export const items = sqliteTable("items", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
 });
-
-// Item.findAll(), Item.findById(1), Item.create({...}), etc.
 \`\`\`
+
+Query in loaders: \`db.select().from(items).all()\`
 
 ## View Layer
 

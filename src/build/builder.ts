@@ -22,7 +22,11 @@ const PROJECT_ROOT = resolve(".");
 function generateClientEntry(pagePath: string): string {
   const fromDir = resolve(PROJECT_ROOT, ".vibeframe/client-entries");
   const relToPage = relative(fromDir, pagePath);
-  const relToHydrate = relative(fromDir, resolve(PROJECT_ROOT, "src/client/hydrate.ts"));
+  // Find hydrate.ts — either in local src/ (framework dev) or node_modules (installed)
+  const localHydrate = resolve(PROJECT_ROOT, "src/client/hydrate.ts");
+  const installedHydrate = resolve(PROJECT_ROOT, "node_modules/vibeframe/src/client/hydrate.ts");
+  const hydratePath = existsSync(localHydrate) ? localHydrate : installedHydrate;
+  const relToHydrate = relative(fromDir, hydratePath);
 
   return `import { hydrate } from "${relToHydrate}";
 import Page from "${relToPage}";

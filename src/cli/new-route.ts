@@ -14,6 +14,21 @@ function capitalize(s: string): string {
   return s.replace(/[[\]]/g, "").replace(/(^|-)(\w)/g, (_, _2, c) => c.toUpperCase());
 }
 
+/** Resolve vibeframe module path — works both in dev and installed contexts */
+function vfImport(modulePath: string): string {
+  const localPath = resolve("src", modulePath);
+  if (existsSync(localPath)) {
+    // Framework dev — use relative path to src/
+    return null as any; // handled below
+  }
+  // Installed — use package imports
+  return `vibeframe/${modulePath.replace(/\.ts$/, "")}`;
+}
+
+function getImportPrefix(): "local" | "package" {
+  return existsSync(resolve("src/index.ts")) ? "local" : "package";
+}
+
 export async function newRoute(routePath: string, options: { loader?: boolean; action?: boolean; schema?: boolean } = {}) {
   const routesDir = resolve("routes");
   const targetDir = resolve(routesDir, routePath);
@@ -27,28 +42,27 @@ export async function newRoute(routePath: string, options: { loader?: boolean; a
 
   const componentName = capitalize(routePath.split("/").pop() ?? "Page") + "Page";
   const isDynamic = routePath.includes("[");
-
-  // Determine relative depth to src/
+  const isLocal = getImportPrefix() === "local";
   const depth = routePath.split("/").length;
   const srcPrefix = "../".repeat(depth + 1) + "src";
 
-  // Always create page.tsx
-  const hasLoader = options.loader !== false; // default true
+  // Import paths differ between framework dev and installed package
+  const typesImport = isLocal ? `${srcPrefix}/types.ts` : "vibeframe";
+  const dbImport = isLocal ? `${srcPrefix}/db/database.ts` : "vibeframe";
+  const schemaHelpersImport = isLocal ? `${srcPrefix}/db/schema.ts` : "vibeframe";
+  const formImport = isLocal ? `${srcPrefix}/components/Form.tsx` : "vibeframe";
+
+  const hasLoader = options.loader !== false;
   const hasAction = options.action ?? false;
   const hasSchema = options.schema ?? false;
 
   // page.tsx
   const pageImports: string[] = [];
-  const pagePropsType = hasLoader
-    ? `import type { Props } from "./loader.ts";\n`
-    : "";
+  if (hasLoader) pageImports.push(`import type { Props } from "./loader.ts";`);
+  if (hasAction) pageImports.push(`import { Form } from "${formImport}";`);
   const propsArg = hasLoader ? `props: Props` : "";
 
-  if (hasAction) {
-    pageImports.push(`import { Form } from "${srcPrefix}/components/Form.tsx";`);
-  }
-
-  await Bun.write(join(targetDir, "page.tsx"), `${pagePropsType}${pageImports.join("\n")}${pageImports.length ? "\n" : ""}
+  await Bun.write(join(targetDir, "page.tsx"), `${pageImports.join("\n")}${pageImports.length ? "\n" : ""}
 export default function ${componentName}(${propsArg}) {
   return (
     <div>
@@ -65,9 +79,7 @@ export default function ${componentName}(${propsArg}) {
       ? `  // Access route params via req.params\n  return { id: req.params.id };`
       : `  return { title: "${routePath}" };`;
 
-    await Bun.write(join(targetDir, "loader.ts"), `import type { VibeframeRequest } from "${srcPrefix}/types.ts";
-
-export async function loader(req: VibeframeRequest) {
+    await Bun.write(join(targetDir, "loader.ts"), `export async function loader(req: any) {
 ${loaderBody}
 }
 
@@ -77,9 +89,9 @@ export type Props = Awaited<ReturnType<typeof loader>>;
 
   // action.ts
   if (hasAction) {
-    await Bun.write(join(targetDir, "action.ts"), `import type { VibeframeRequest, ActionResult } from "${srcPrefix}/types.ts";
+    await Bun.write(join(targetDir, "action.ts"), `import { getDatabase } from "${dbImport}";
 
-export async function action(req: VibeframeRequest): Promise<ActionResult> {
+export async function action(req: any) {
   const form = await req.formData();
   // TODO: process form data
   return { redirect: "/${routePath.replace(/\[.*?\]/g, "")}" };
@@ -90,25 +102,17 @@ export async function action(req: VibeframeRequest): Promise<ActionResult> {
   // schema.ts
   if (hasSchema) {
     const tableName = routePath.split("/").filter((s) => !s.startsWith("[")).pop() ?? "items";
-    const typeName = capitalize(tableName.replace(/s$/, ""));
 
-    await Bun.write(join(targetDir, "schema.ts"), `import { schema } from "${srcPrefix}/db/schema.ts";
+    await Bun.write(join(targetDir, "schema.ts"), `import { sqliteTable, text, integer } from "${schemaHelpersImport}";
 
-interface ${typeName} {
-  id: number;
-  name: string;
-  createdAt: string;
-}
-
-export const ${typeName} = schema<${typeName}>("${tableName}", {
-  id: "integer primary key autoincrement",
-  name: "text not null",
-  createdAt: "text default current_timestamp",
+export const ${tableName} = sqliteTable("${tableName}", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  createdAt: text("created_at").default("current_timestamp"),
 });
 `);
   }
 
-  // Print what was created
   console.log(`\n  Created route: ${routePath}/`);
   console.log(`    ${routePath}/page.tsx`);
   if (hasLoader) console.log(`    ${routePath}/loader.ts`);
