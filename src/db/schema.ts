@@ -1,10 +1,10 @@
 /**
- * Drizzle schema helpers for Coloc.
+ * Drizzle schema helpers for Claudestack.
  * Re-exports Drizzle's SQLite schema builders for convenience.
  *
  * Usage:
- *   import { sqliteTable, text, integer } from "coloc/db/schema";
- *   import { getDatabase } from "coloc/db/database";
+ *   import { sqliteTable, text, integer } from "claudestack/db/schema";
+ *   import { getDatabase } from "claudestack/db/database";
  *
  *   export const users = sqliteTable("users", {
  *     id: integer("id").primaryKey({ autoIncrement: true }),

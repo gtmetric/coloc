@@ -1,10 +1,10 @@
-# Coloc
+# Claudestack
 
 **A full-stack framework built for Claude Code.**
 
 Other frameworks scatter features across dozens of directories. Claude Code spends minutes searching, planning, guessing — then gets it wrong.
 
-Coloc puts everything for a feature in one directory. Claude reads one folder, gets the full picture, acts immediately.
+Claudestack puts everything for a feature in one directory. Claude reads one folder, gets the full picture, acts immediately.
 
 ```
 routes/users/
@@ -17,7 +17,7 @@ routes/users/
 ## Get Started
 
 ```bash
-bunx coloc create my-app
+bunx claudestack create my-app
 cd my-app
 bun run dev
 ```

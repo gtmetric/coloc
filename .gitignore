@@ -1,6 +1,6 @@
 node_modules/
 dist/
-.coloc/
+.claudestack/
 data/
 *.log
 *.db

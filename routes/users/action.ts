@@ -1,8 +1,8 @@
-import type { ColocRequest, ActionResult } from "../../src/types.ts";
+import type { ClaudestackRequest, ActionResult } from "../../src/types.ts";
 import { getDatabase } from "../../src/db/database.ts";
 import { users } from "./schema.ts";
 
-export async function action(req: ColocRequest): Promise<ActionResult> {
+export async function action(req: ClaudestackRequest): Promise<ActionResult> {
   const form = await req.formData();
   const name = form.get("name") as string;
   const email = form.get("email") as string;

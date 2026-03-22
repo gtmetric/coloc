@@ -2,12 +2,12 @@
  * Middleware type definitions.
  */
 
-import type { ColocRequest, ColocResponse } from "../types.ts";
+import type { ClaudestackRequest, ClaudestackResponse } from "../types.ts";
 
 export type NextFunction = () => Promise<Response>;
 
 export type Middleware = (
-  req: ColocRequest,
-  res: ColocResponse,
+  req: ClaudestackRequest,
+  res: ClaudestackResponse,
   next: NextFunction,
 ) => Promise<Response>;

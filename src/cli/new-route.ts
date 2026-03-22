@@ -1,10 +1,10 @@
 /**
  * Scaffold a new route directory with all the right files.
  *
- * Usage: coloc new route <name>
- *   coloc new route users         → routes/users/
- *   coloc new route users/[id]    → routes/users/[id]/
- *   coloc new route blog/[slug]   → routes/blog/[slug]/
+ * Usage: claudestack new route <name>
+ *   claudestack new route users         → routes/users/
+ *   claudestack new route users/[id]    → routes/users/[id]/
+ *   claudestack new route blog/[slug]   → routes/blog/[slug]/
  */
 
 import { resolve, join } from "path";
@@ -65,9 +65,9 @@ export default function ${componentName}(${propsArg}) {
       ? `  // Access route params via req.params\n  return { id: req.params.id };`
       : `  return { title: "${routePath}" };`;
 
-    await Bun.write(join(targetDir, "loader.ts"), `import type { ColocRequest } from "${srcPrefix}/types.ts";
+    await Bun.write(join(targetDir, "loader.ts"), `import type { ClaudestackRequest } from "${srcPrefix}/types.ts";
 
-export async function loader(req: ColocRequest) {
+export async function loader(req: ClaudestackRequest) {
 ${loaderBody}
 }
 
@@ -77,9 +77,9 @@ export type Props = Awaited<ReturnType<typeof loader>>;
 
   // action.ts
   if (hasAction) {
-    await Bun.write(join(targetDir, "action.ts"), `import type { ColocRequest, ActionResult } from "${srcPrefix}/types.ts";
+    await Bun.write(join(targetDir, "action.ts"), `import type { ClaudestackRequest, ActionResult } from "${srcPrefix}/types.ts";
 
-export async function action(req: ColocRequest): Promise<ActionResult> {
+export async function action(req: ClaudestackRequest): Promise<ActionResult> {
   const form = await req.formData();
   // TODO: process form data
   return { redirect: "/${routePath.replace(/\[.*?\]/g, "")}" };

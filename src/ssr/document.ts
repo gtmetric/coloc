@@ -16,10 +16,10 @@ export interface DocumentOptions {
 }
 
 export function wrapInDocument(options: DocumentOptions): string {
-  const { title = "Coloc", content, data, scripts = [], styles = [], head = "" } = options;
+  const { title = "Claudestack", content, data, scripts = [], styles = [], head = "" } = options;
 
   const dataScript = data != null
-    ? `<script id="__COLOC_DATA__" type="application/json">${escapeJsonForScript(JSON.stringify(data))}</script>`
+    ? `<script id="__CLAUDESTACK_DATA__" type="application/json">${escapeJsonForScript(JSON.stringify(data))}</script>`
     : "";
 
   const scriptTags = scripts
@@ -36,7 +36,7 @@ export function wrapInDocument(options: DocumentOptions): string {
   ${head}
 </head>
 <body>
-  <div id="__coloc">${content}</div>
+  <div id="__claudestack">${content}</div>
   ${dataScript}
   ${scriptTags}
 </body>

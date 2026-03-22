@@ -1,9 +1,9 @@
 /**
- * Core types for the Coloc framework.
+ * Core types for the Claudestack framework.
  * All request/response types used throughout the framework are defined here.
  */
 
-export interface ColocRequest {
+export interface ClaudestackRequest {
   /** HTTP method (GET, POST, etc.) */
   method: string;
   /** Parsed URL object */
@@ -22,9 +22,9 @@ export interface ColocRequest {
   raw: Request;
 }
 
-export interface ColocResponse {
+export interface ClaudestackResponse {
   /** Set the HTTP status code. Chainable. */
-  status: (code: number) => ColocResponse;
+  status: (code: number) => ClaudestackResponse;
   /** Send an HTML string response */
   html: (content: string) => Response;
   /** Send a JSON response */
@@ -34,14 +34,14 @@ export interface ColocResponse {
   /** Send a plain text response */
   text: (content: string) => Response;
   /** Set a response header. Chainable. */
-  header: (name: string, value: string) => ColocResponse;
+  header: (name: string, value: string) => ClaudestackResponse;
 }
 
 /** A handler function that processes a request and returns a response */
-export type ColocHandler = (req: ColocRequest, res: ColocResponse) => Response | Promise<Response>;
+export type ClaudestackHandler = (req: ClaudestackRequest, res: ClaudestackResponse) => Response | Promise<Response>;
 
-/** Configuration for the Coloc server */
-export interface ColocConfig {
+/** Configuration for the Claudestack server */
+export interface ClaudestackConfig {
   port?: number;
   hostname?: string;
   pagesDir?: string;
@@ -54,19 +54,19 @@ export interface ColocConfig {
  * Usage: Define your loader, then use its return type as page props.
  *
  *   // loader.ts
- *   export async function loader(req: ColocRequest) {
+ *   export async function loader(req: ClaudestackRequest) {
  *     return { users: User.findAll() };
  *   }
  *
  *   // page.tsx
  *   import type { loader } from "./loader.ts";
- *   import type { PageProps } from "coloc";
+ *   import type { PageProps } from "claudestack";
  *
  *   export default function UsersPage(props: PageProps<typeof loader>) {
  *     props.users  // ← fully typed as User[]
  *   }
  */
-export type LoaderFunction = (req: ColocRequest) => any | Promise<any>;
+export type LoaderFunction = (req: ClaudestackRequest) => any | Promise<any>;
 
 /** Extract the return type of a loader function, unwrapping Promises */
 export type LoaderData<T extends LoaderFunction> = Awaited<ReturnType<T>>;

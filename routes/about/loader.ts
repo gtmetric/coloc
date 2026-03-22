@@ -1,6 +1,6 @@
 export async function loader() {
   return {
-    title: "About Coloc",
+    title: "About Claudestack",
     builtAt: new Date().toISOString(),
   };
 }

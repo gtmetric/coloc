@@ -8,16 +8,16 @@ import { h, hydrate as preactHydrate } from "preact";
 
 export function hydrate(Component: Function, container: Element | null): void {
   if (!container) {
-    console.warn("[Coloc] Hydration target #__coloc not found");
+    console.warn("[Claudestack] Hydration target #__claudestack not found");
     return;
   }
 
-  const dataEl = document.getElementById("__COLOC_DATA__");
+  const dataEl = document.getElementById("__CLAUDESTACK_DATA__");
   let props: Record<string, any> = {};
   if (dataEl?.textContent) {
     try { props = JSON.parse(dataEl.textContent); } catch {}
   }
 
   preactHydrate(h(Component as any, props), container);
-  console.log("[Coloc] Hydration complete");
+  console.log("[Claudestack] Hydration complete");
 }

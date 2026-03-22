@@ -15,11 +15,11 @@ export async function listRoutes() {
   const routes = await scanRoutes(routesDir, pagesDir);
 
   if (routes.length === 0) {
-    console.log("\n  No routes found. Create one with: coloc new route <name>\n");
+    console.log("\n  No routes found. Create one with: claudestack new route <name>\n");
     return;
   }
 
-  console.log(`\n  Coloc routes (${routes.length})\n`);
+  console.log(`\n  Claudestack routes (${routes.length})\n`);
   const pad = (s: string, n: number) => s + " ".repeat(Math.max(0, n - s.length));
   console.log(`  ${pad("Pattern", 20)} ${pad("Page", 32)} ${pad("Loader", 8)} ${pad("Action", 8)} Schema`);
   console.log("  " + "-".repeat(80));

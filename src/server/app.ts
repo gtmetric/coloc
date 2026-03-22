@@ -1,5 +1,5 @@
 /**
- * Coloc application — wires together server, router, middleware, and SSR.
+ * Claudestack application — wires together server, router, middleware, and SSR.
  */
 
 import { resolve } from "path";
@@ -11,9 +11,9 @@ import { renderPage } from "../ssr/renderer.ts";
 import { compose, loadMiddleware } from "../middleware/pipeline.ts";
 import { routeNotFound } from "../errors.ts";
 import { wrapInDocument } from "../ssr/document.ts";
-import type { ColocConfig, ColocRequest, ColocResponse } from "../types.ts";
+import type { ClaudestackConfig, ClaudestackRequest, ClaudestackResponse } from "../types.ts";
 
-export async function createApp(config: ColocConfig = {}) {
+export async function createApp(config: ClaudestackConfig = {}) {
   const projectRoot = resolve(".");
   const routesDir = resolve(config.routesDir ?? "routes");
   const pagesDir = resolve(config.pagesDir ?? "pages");
@@ -29,7 +29,7 @@ export async function createApp(config: ColocConfig = {}) {
   const { syncSchemas } = await import("../db/migrate.ts");
   await syncSchemas(routes);
 
-  return serve(async (req: ColocRequest, res: ColocResponse) => {
+  return serve(async (req: ClaudestackRequest, res: ClaudestackResponse) => {
     // Serve static files from public/
     if (req.url.pathname.startsWith("/public/")) {
       const fileName = req.url.pathname.replace("/public/", "");

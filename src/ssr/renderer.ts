@@ -13,18 +13,18 @@ import renderToString from "preact-render-to-string";
 import { wrapInDocument } from "./document.ts";
 import { routeNoDefaultExport, loaderError, actionError, renderError } from "../errors.ts";
 import { validateCSRFToken } from "../db/csrf.ts";
-import type { ColocRequest } from "../types.ts";
+import type { ClaudestackRequest } from "../types.ts";
 import type { Route } from "../router/types.ts";
 
 export interface RenderResult {
   html?: string;
   redirect?: string;
-  error?: import("../errors.ts").ColocError;
+  error?: import("../errors.ts").ClaudestackError;
 }
 
 export async function renderPage(
   route: Route,
-  req: ColocRequest,
+  req: ClaudestackRequest,
   clientScripts: string[] = [],
   version?: number,
 ): Promise<RenderResult> {
@@ -43,7 +43,7 @@ export async function renderPage(
       if (!validateCSRFToken(csrfToken)) {
         return {
           html: wrapInDocument({ title: "Forbidden", content: "<h1>403 Forbidden</h1><p>Invalid or expired CSRF token. Please refresh and try again.</p>" }),
-          error: new (await import("../errors.ts")).ColocError("COLOC_CSRF_001", "CSRF validation failed", "The CSRF token is invalid or expired.", "Refresh the page and resubmit the form."),
+          error: new (await import("../errors.ts")).ClaudestackError("CLAUDESTACK_CSRF_001", "CSRF validation failed", "The CSRF token is invalid or expired.", "Refresh the page and resubmit the form."),
         };
       }
     } catch {
@@ -84,7 +84,7 @@ export async function renderPage(
 
 async function renderPageWithProps(
   route: Route,
-  req: ColocRequest,
+  req: ClaudestackRequest,
   extraProps: Record<string, any>,
   clientScripts: string[],
   cacheBust: string,
@@ -140,7 +140,7 @@ async function renderPageWithProps(
   try {
     const vnode = h(pageMod.default, props);
     const content = renderToString(vnode);
-    const title = props.title ?? "Coloc";
+    const title = props.title ?? "Claudestack";
 
     // Auto-inject Tailwind CSS if public/app.css exists
     const styles: string[] = [];

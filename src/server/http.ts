@@ -1,8 +1,8 @@
 /**
- * Coloc HTTP server — a thin wrapper around Bun.serve().
+ * Claudestack HTTP server — a thin wrapper around Bun.serve().
  */
 
-import type { ColocRequest, ColocResponse, ColocHandler, ColocConfig } from "../types.ts";
+import type { ClaudestackRequest, ClaudestackResponse, ClaudestackHandler, ClaudestackConfig } from "../types.ts";
 
 function parseHeaders(request: Request): Record<string, string> {
   const headers: Record<string, string> = {};
@@ -20,7 +20,7 @@ function parseQuery(url: URL): Record<string, string> {
   return query;
 }
 
-export function createRequest(raw: Request): ColocRequest {
+export function createRequest(raw: Request): ClaudestackRequest {
   const url = new URL(raw.url);
   return {
     method: raw.method,
@@ -42,11 +42,11 @@ export function createRequest(raw: Request): ColocRequest {
   };
 }
 
-export function createResponse(): ColocResponse {
+export function createResponse(): ClaudestackResponse {
   let statusCode = 200;
   const responseHeaders = new Headers();
 
-  const res: ColocResponse = {
+  const res: ClaudestackResponse = {
     status(code: number) {
       statusCode = code;
       return res;
@@ -76,7 +76,7 @@ export function createResponse(): ColocResponse {
   return res;
 }
 
-export function serve(handler: ColocHandler, config: ColocConfig = {}) {
+export function serve(handler: ClaudestackHandler, config: ClaudestackConfig = {}) {
   const port = config.port ?? 3000;
   const hostname = config.hostname ?? "localhost";
 
@@ -97,6 +97,6 @@ export function serve(handler: ColocHandler, config: ColocConfig = {}) {
     },
   });
 
-  console.log(`\n  Coloc server running at http://${hostname}:${port}\n`);
+  console.log(`\n  Claudestack server running at http://${hostname}:${port}\n`);
   return server;
 }

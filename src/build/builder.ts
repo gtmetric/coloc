@@ -20,13 +20,13 @@ const preactCompatPlugin: BunPlugin = {
 const PROJECT_ROOT = resolve(".");
 
 function generateClientEntry(pagePath: string): string {
-  const fromDir = resolve(PROJECT_ROOT, ".coloc/client-entries");
+  const fromDir = resolve(PROJECT_ROOT, ".claudestack/client-entries");
   const relToPage = relative(fromDir, pagePath);
   const relToHydrate = relative(fromDir, resolve(PROJECT_ROOT, "src/client/hydrate.ts"));
 
   return `import { hydrate } from "${relToHydrate}";
 import Page from "${relToPage}";
-hydrate(Page, document.getElementById("__coloc"));
+hydrate(Page, document.getElementById("__claudestack"));
 `;
 }
 
@@ -43,7 +43,7 @@ export async function build() {
   const routesDir = resolve(PROJECT_ROOT, "routes");
   const pagesDir = resolve(PROJECT_ROOT, "pages");
   const outDir = resolve(PROJECT_ROOT, "dist/client");
-  const entriesDir = resolve(PROJECT_ROOT, ".coloc/client-entries");
+  const entriesDir = resolve(PROJECT_ROOT, ".claudestack/client-entries");
 
   if (existsSync(outDir)) rmSync(outDir, { recursive: true });
   if (existsSync(entriesDir)) rmSync(entriesDir, { recursive: true });
