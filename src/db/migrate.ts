@@ -1,5 +1,5 @@
 /**
- * Auto-migration for Claudestack.
+ * Auto-migration for Claudeopt.
  * Scans route schema files and creates tables using raw SQL from Drizzle table definitions.
  */
 

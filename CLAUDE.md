@@ -1,4 +1,4 @@
-# Claudestack Framework
+# Claudeopt Framework
 
 An AI-optimal full-stack framework built with Bun. Schema-driven, colocated routes, Preact rendering, zero config.
 
@@ -7,8 +7,8 @@ An AI-optimal full-stack framework built with Bun. Schema-driven, colocated rout
 - `bun run dev` — Dev server with live reload (port 3000)
 - `bun run build` — Bundle client JS for production
 - `bun run start` — Serve production build
-- `bun run bin/claudestack.ts routes` — List all routes with their files
-- `bun run bin/claudestack.ts new route <path>` — Scaffold a new route
+- `bun run bin/claudeopt.ts routes` — List all routes with their files
+- `bun run bin/claudeopt.ts new route <path>` — Scaffold a new route
   - `--action` — include action.ts
   - `--schema` — include schema.ts
 
@@ -16,7 +16,7 @@ An AI-optimal full-stack framework built with Bun. Schema-driven, colocated rout
 
 ```
 src/
-  server/http.ts        — Bun.serve() wrapper with ClaudestackRequest/ClaudestackResponse
+  server/http.ts        — Bun.serve() wrapper with ClaudeoptRequest/ClaudeoptResponse
   server/app.ts         — Main app: server + router + middleware + SSR
   router/scanner.ts     — Scans routes/ for page.tsx files, builds route table
   router/matcher.ts     — Matches URL to route, extracts params
@@ -75,9 +75,9 @@ With type-safe data loading (loader→page props are typed):
 
 ```tsx
 // routes/example/loader.ts
-import type { ClaudestackRequest } from "../../src/types.ts";
+import type { ClaudeoptRequest } from "../../src/types.ts";
 
-export async function loader(req: ClaudestackRequest) {
+export async function loader(req: ClaudeoptRequest) {
   return { title: "Example", items: [] as string[] };
 }
 
@@ -131,7 +131,7 @@ export async function loader() {
 }
 ```
 
-Tables are auto-created on startup. Database at `data/claudestack.db` (SQLite).
+Tables are auto-created on startup. Database at `data/claudeopt.db` (SQLite).
 Relations, joins, and type-safe queries are all supported via Drizzle.
 
 ## Form Component
@@ -152,20 +152,20 @@ CSRF token is automatically included. Actions without valid CSRF return 403.
 
 | Code | Meaning |
 |------|---------|
-| `CLAUDESTACK_ROUTE_001` | Page missing default export |
-| `CLAUDESTACK_ROUTE_002` | No route matches URL |
-| `CLAUDESTACK_ROUTE_003` | Invalid dynamic parameter |
-| `CLAUDESTACK_LOADER_001` | loader() threw |
-| `CLAUDESTACK_ACTION_001` | action() threw |
-| `CLAUDESTACK_RENDER_001` | Component render failed |
-| `CLAUDESTACK_DB_001` | Schema/table error |
-| `CLAUDESTACK_CSRF_001` | Invalid CSRF token |
+| `CLAUDEOPT_ROUTE_001` | Page missing default export |
+| `CLAUDEOPT_ROUTE_002` | No route matches URL |
+| `CLAUDEOPT_ROUTE_003` | Invalid dynamic parameter |
+| `CLAUDEOPT_LOADER_001` | loader() threw |
+| `CLAUDEOPT_ACTION_001` | action() threw |
+| `CLAUDEOPT_RENDER_001` | Component render failed |
+| `CLAUDEOPT_DB_001` | Schema/table error |
+| `CLAUDEOPT_CSRF_001` | Invalid CSRF token |
 
 ## AI Optimization Features
 
 - **`Props` type export** — loaders export their Props type, pages import with one line
 - **Route validation** — on dev startup, validates all routes and reports issues with fix suggestions
-- **`claudestack routes`** — instant overview of all routes, loaders, actions, schemas
-- **`claudestack new route`** — scaffolds route with correct imports and types pre-filled
+- **`claudeopt routes`** — instant overview of all routes, loaders, actions, schemas
+- **`claudeopt new route`** — scaffolds route with correct imports and types pre-filled
 - **Structured errors** — every error has code, reason, and fix suggestion
 - **Colocated routes** — one directory = one feature, minimizes context needed

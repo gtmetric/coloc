@@ -2,12 +2,12 @@
  * Middleware type definitions.
  */
 
-import type { ClaudestackRequest, ClaudestackResponse } from "../types.ts";
+import type { ClaudeoptRequest, ClaudeoptResponse } from "../types.ts";
 
 export type NextFunction = () => Promise<Response>;
 
 export type Middleware = (
-  req: ClaudestackRequest,
-  res: ClaudestackResponse,
+  req: ClaudeoptRequest,
+  res: ClaudeoptResponse,
   next: NextFunction,
 ) => Promise<Response>;

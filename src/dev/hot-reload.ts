@@ -5,15 +5,15 @@
 export const RELOAD_SCRIPT = `
 <script>
 (function() {
-  const es = new EventSource("/__claudestack/reload");
+  const es = new EventSource("/__claudeopt/reload");
   es.onmessage = function(e) {
     if (e.data === "reload") {
-      console.log("[Claudestack] File changed, reloading...");
+      console.log("[Claudeopt] File changed, reloading...");
       window.location.reload();
     }
   };
   es.onerror = function() {
-    console.log("[Claudestack] SSE connection lost, retrying...");
+    console.log("[Claudeopt] SSE connection lost, retrying...");
   };
 })();
 </script>`;

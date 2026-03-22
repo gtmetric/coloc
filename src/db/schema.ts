@@ -1,10 +1,10 @@
 /**
- * Drizzle schema helpers for Claudestack.
+ * Drizzle schema helpers for Claudeopt.
  * Re-exports Drizzle's SQLite schema builders for convenience.
  *
  * Usage:
- *   import { sqliteTable, text, integer } from "claudestack/db/schema";
- *   import { getDatabase } from "claudestack/db/database";
+ *   import { sqliteTable, text, integer } from "claudeopt/db/schema";
+ *   import { getDatabase } from "claudeopt/db/database";
  *
  *   export const users = sqliteTable("users", {
  *     id: integer("id").primaryKey({ autoIncrement: true }),

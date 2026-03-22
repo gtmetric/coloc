@@ -1,5 +1,5 @@
 /**
- * Claudestack CLI — command parser.
+ * Claudeopt CLI — command parser.
  */
 
 const [, , command, ...args] = process.argv;
@@ -14,7 +14,7 @@ switch (command) {
 
   case "build": {
     const { build } = await import("../build/builder.ts");
-    console.log("\n  Claudestack build\n");
+    console.log("\n  Claudeopt build\n");
     await build();
     console.log("\n  Build complete!\n");
     break;
@@ -36,7 +36,7 @@ switch (command) {
   case "create": {
     const projectName = args[0];
     if (!projectName) {
-      console.error("  Usage: claudestack create <project-name>");
+      console.error("  Usage: claudeopt create <project-name>");
       process.exit(1);
     }
     const { createProject } = await import("./create.ts");
@@ -49,7 +49,7 @@ switch (command) {
     if (subcommand === "route") {
       const routePath = args[1];
       if (!routePath) {
-        console.error("  Usage: claudestack new route <path> [--action] [--schema]");
+        console.error("  Usage: claudeopt new route <path> [--action] [--schema]");
         process.exit(1);
       }
       const { newRoute } = await import("./new-route.ts");
@@ -59,18 +59,18 @@ switch (command) {
         schema: args.includes("--schema"),
       });
     } else {
-      console.error(`  Unknown: claudestack new ${subcommand ?? ""}`);
-      console.error("  Available: claudestack new route <path>");
+      console.error(`  Unknown: claudeopt new ${subcommand ?? ""}`);
+      console.error("  Available: claudeopt new route <path>");
     }
     break;
   }
 
   default:
     console.log(`
-  Claudestack — An AI-optimal full-stack framework
+  Claudeopt — An AI-optimal full-stack framework
 
   Getting started:
-    claudestack create <project-name>            Create a new project
+    claudeopt create <project-name>            Create a new project
 
   Development:
     bun run dev [port]                    Start development server
@@ -78,14 +78,14 @@ switch (command) {
     bun run start [port]                  Serve production build
 
   Route tools:
-    claudestack routes                           List all routes with their files
-    claudestack new route <path>                 Scaffold a new route
+    claudeopt routes                           List all routes with their files
+    claudeopt new route <path>                 Scaffold a new route
       --action                            Include action.ts
       --schema                            Include schema.ts
 
   Examples:
-    claudestack create my-app
-    claudestack new route products
-    claudestack new route orders --action --schema
+    claudeopt create my-app
+    claudeopt new route products
+    claudeopt new route orders --action --schema
 `);
 }

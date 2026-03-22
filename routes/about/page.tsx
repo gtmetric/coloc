@@ -1,8 +1,8 @@
 export default function AboutPage() {
   return (
     <div>
-      <h1>About Claudestack</h1>
-      <p>Claudestack is an AI-optimal full-stack framework.</p>
+      <h1>About Claudeopt</h1>
+      <p>Claudeopt is an AI-optimal full-stack framework.</p>
       <ul>
         <li>Colocated route modules</li>
         <li>Schema-driven database (Bun SQLite)</li>

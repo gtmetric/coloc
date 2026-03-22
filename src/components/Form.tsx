@@ -1,5 +1,5 @@
 /**
- * Claudestack Form component — progressive enhancement with CSRF.
+ * Claudeopt Form component — progressive enhancement with CSRF.
  *
  * Renders a standard HTML <form> with a hidden CSRF token.
  * Works without JavaScript. Enhanced with hydration later.

@@ -1,8 +1,8 @@
 /**
- * Claudestack HTTP server — a thin wrapper around Bun.serve().
+ * Claudeopt HTTP server — a thin wrapper around Bun.serve().
  */
 
-import type { ClaudestackRequest, ClaudestackResponse, ClaudestackHandler, ClaudestackConfig } from "../types.ts";
+import type { ClaudeoptRequest, ClaudeoptResponse, ClaudeoptHandler, ClaudeoptConfig } from "../types.ts";
 
 function parseHeaders(request: Request): Record<string, string> {
   const headers: Record<string, string> = {};
@@ -20,7 +20,7 @@ function parseQuery(url: URL): Record<string, string> {
   return query;
 }
 
-export function createRequest(raw: Request): ClaudestackRequest {
+export function createRequest(raw: Request): ClaudeoptRequest {
   const url = new URL(raw.url);
   return {
     method: raw.method,
@@ -42,11 +42,11 @@ export function createRequest(raw: Request): ClaudestackRequest {
   };
 }
 
-export function createResponse(): ClaudestackResponse {
+export function createResponse(): ClaudeoptResponse {
   let statusCode = 200;
   const responseHeaders = new Headers();
 
-  const res: ClaudestackResponse = {
+  const res: ClaudeoptResponse = {
     status(code: number) {
       statusCode = code;
       return res;
@@ -76,7 +76,7 @@ export function createResponse(): ClaudestackResponse {
   return res;
 }
 
-export function serve(handler: ClaudestackHandler, config: ClaudestackConfig = {}) {
+export function serve(handler: ClaudeoptHandler, config: ClaudeoptConfig = {}) {
   const port = config.port ?? 3000;
   const hostname = config.hostname ?? "localhost";
 
@@ -97,6 +97,6 @@ export function serve(handler: ClaudestackHandler, config: ClaudestackConfig = {
     },
   });
 
-  console.log(`\n  Claudestack server running at http://${hostname}:${port}\n`);
+  console.log(`\n  Claudeopt server running at http://${hostname}:${port}\n`);
   return server;
 }

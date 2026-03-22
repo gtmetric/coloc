@@ -2,11 +2,11 @@
  * Middleware composition — the onion model.
  */
 
-import type { ClaudestackRequest, ClaudestackResponse } from "../types.ts";
+import type { ClaudeoptRequest, ClaudeoptResponse } from "../types.ts";
 import type { Middleware, NextFunction } from "./types.ts";
 
 export function compose(middlewares: Middleware[]): Middleware {
-  return async (req: ClaudestackRequest, res: ClaudestackResponse, finalNext: NextFunction): Promise<Response> => {
+  return async (req: ClaudeoptRequest, res: ClaudeoptResponse, finalNext: NextFunction): Promise<Response> => {
     let index = -1;
 
     async function dispatch(i: number): Promise<Response> {

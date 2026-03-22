@@ -1,6 +1,6 @@
 node_modules
 dist
-.claudestack
+.claudeopt
 data
 *.log
 *.db
