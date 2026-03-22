@@ -6,6 +6,8 @@
  * POST/PUT/DELETE: action() → redirect or re-render with errors
  */
 
+import { resolve } from "path";
+import { existsSync } from "fs";
 import { h } from "preact";
 import renderToString from "preact-render-to-string";
 import { wrapInDocument } from "./document.ts";
@@ -140,11 +142,18 @@ async function renderPageWithProps(
     const content = renderToString(vnode);
     const title = props.title ?? "Coloc";
 
+    // Auto-inject Tailwind CSS if public/app.css exists
+    const styles: string[] = [];
+    if (existsSync(resolve("public/app.css"))) {
+      styles.push("/public/app.css");
+    }
+
     const html = wrapInDocument({
       title,
       content,
       data: props,
       scripts: clientScripts,
+      styles,
     });
 
     return { html };

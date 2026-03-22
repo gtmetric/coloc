@@ -1,8 +1,7 @@
 import { Form, FieldError } from "../../src/components/Form.tsx";
-import type { PageProps } from "../../src/types.ts";
-import type { loader } from "./loader.ts";
+import type { Props } from "./loader.ts";
 
-export default function UsersPage({ users, _actionErrors }: PageProps<typeof loader>) {
+export default function UsersPage({ users, _actionErrors }: Props & { _actionErrors?: Record<string, string> }) {
   return (
     <div>
       <h1>Users</h1>

@@ -30,6 +30,8 @@ export async function createProject(name: string) {
     "",
     "routes/index",
     "routes/counter",
+    "styles",
+    "public",
     ".claude",
   ];
   for (const dir of dirs) {
@@ -50,6 +52,8 @@ export async function createProject(name: string) {
     dependencies: {
       coloc: "latest",
       preact: "^10.29.0",
+      tailwindcss: "^4.0.0",
+      "@tailwindcss/cli": "^4.0.0",
     },
     devDependencies: {
       "@types/bun": "latest",
@@ -97,14 +101,18 @@ data/
     }],
   }, null, 2) + "\n");
 
+  // styles/app.css
+  await Bun.write(join(projectDir, "styles/app.css"), `@import "tailwindcss";
+`);
+
   // routes/index/page.tsx
   await Bun.write(join(projectDir, "routes/index/page.tsx"), `export default function HomePage() {
   return (
-    <div>
-      <h1>${name}</h1>
-      <p>Built with <a href="https://github.com/coloc-framework/coloc">Coloc</a>.</p>
-      <nav>
-        <a href="/counter">Counter demo</a>
+    <div class="max-w-2xl mx-auto p-8">
+      <h1 class="text-4xl font-bold mb-4">${name}</h1>
+      <p class="text-lg text-gray-600 mb-6">Built with <a href="https://github.com/coloc-framework/coloc" class="text-blue-600 hover:underline">Coloc</a>.</p>
+      <nav class="flex gap-4">
+        <a href="/counter" class="text-blue-600 hover:underline">Counter demo</a>
       </nav>
     </div>
   );

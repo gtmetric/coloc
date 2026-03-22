@@ -50,6 +50,20 @@ export async function build() {
   mkdirSync(entriesDir, { recursive: true });
   mkdirSync(outDir, { recursive: true });
 
+  // Build Tailwind CSS if styles/app.css exists
+  const stylesInput = resolve(PROJECT_ROOT, "styles/app.css");
+  const stylesOutput = resolve(PROJECT_ROOT, "public/app.css");
+  if (existsSync(stylesInput)) {
+    mkdirSync(resolve(PROJECT_ROOT, "public"), { recursive: true });
+    const tw = Bun.spawn(["bunx", "@tailwindcss/cli", "-i", stylesInput, "-o", stylesOutput, "--minify"], {
+      cwd: PROJECT_ROOT,
+      stdout: "ignore",
+      stderr: "inherit",
+    });
+    await tw.exited;
+    console.log("  Built Tailwind CSS");
+  }
+
   const routes = await scanRoutes(routesDir, pagesDir);
   console.log(`  Building ${routes.length} page(s)...`);
 

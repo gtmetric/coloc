@@ -4,3 +4,5 @@ export async function loader() {
     builtAt: new Date().toISOString(),
   };
 }
+
+export type Props = Awaited<ReturnType<typeof loader>>;

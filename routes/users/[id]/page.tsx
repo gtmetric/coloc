@@ -1,11 +1,6 @@
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  createdAt: string;
-}
+import type { Props } from "./loader.ts";
 
-export default function UserDetailPage({ user }: { user: User | null }) {
+export default function UserDetailPage({ user }: Props) {
   if (!user) {
     return (
       <div>
@@ -19,7 +14,7 @@ export default function UserDetailPage({ user }: { user: User | null }) {
     <div>
       <h1>{user.name}</h1>
       <p>Email: {user.email}</p>
-      <p>Created: {user.createdAt}</p>
+      <p>Created: {user.created_at}</p>
       <a href="/users">Back to users</a>
     </div>
   );

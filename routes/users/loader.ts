@@ -10,3 +10,5 @@ export async function loader(req: ColocRequest) {
     users: db.select().from(users).all(),
   };
 }
+
+export type Props = Awaited<ReturnType<typeof loader>>;

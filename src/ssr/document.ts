@@ -11,11 +11,12 @@ export interface DocumentOptions {
   content: string;
   data?: unknown;
   scripts?: string[];
+  styles?: string[];
   head?: string;
 }
 
 export function wrapInDocument(options: DocumentOptions): string {
-  const { title = "Coloc", content, data, scripts = [], head = "" } = options;
+  const { title = "Coloc", content, data, scripts = [], styles = [], head = "" } = options;
 
   const dataScript = data != null
     ? `<script id="__COLOC_DATA__" type="application/json">${escapeJsonForScript(JSON.stringify(data))}</script>`
@@ -31,6 +32,7 @@ export function wrapInDocument(options: DocumentOptions): string {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${title}</title>
+  ${styles.map((href) => `<link rel="stylesheet" href="${href}" />`).join("\n  ")}
   ${head}
 </head>
 <body>

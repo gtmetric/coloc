@@ -40,9 +40,9 @@ export async function newRoute(routePath: string, options: { loader?: boolean; a
   // page.tsx
   const pageImports: string[] = [];
   const pagePropsType = hasLoader
-    ? `import type { PageProps } from "${srcPrefix}/types.ts";\nimport type { loader } from "./loader.ts";\n`
+    ? `import type { Props } from "./loader.ts";\n`
     : "";
-  const propsArg = hasLoader ? `props: PageProps<typeof loader>` : "";
+  const propsArg = hasLoader ? `props: Props` : "";
 
   if (hasAction) {
     pageImports.push(`import { Form } from "${srcPrefix}/components/Form.tsx";`);
@@ -70,6 +70,8 @@ export default function ${componentName}(${propsArg}) {
 export async function loader(req: ColocRequest) {
 ${loaderBody}
 }
+
+export type Props = Awaited<ReturnType<typeof loader>>;
 `);
   }
 

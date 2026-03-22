@@ -11,3 +11,5 @@ export async function loader(req: ColocRequest) {
   }
   return { title: user.name, user };
 }
+
+export type Props = Awaited<ReturnType<typeof loader>>;

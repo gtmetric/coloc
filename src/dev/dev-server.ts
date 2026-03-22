@@ -115,6 +115,19 @@ printValidation(issues);
 const { syncSchemas } = await import("../db/migrate.ts");
 await syncSchemas(routes);
 
+// Build Tailwind CSS if styles/app.css exists
+const stylesInput = resolve(projectRoot, "styles/app.css");
+const stylesOutput = resolve(projectRoot, "public/app.css");
+if (existsSync(stylesInput)) {
+  const tw = Bun.spawn(["bunx", "@tailwindcss/cli", "-i", stylesInput, "-o", stylesOutput, "--minify"], {
+    cwd: projectRoot,
+    stdout: "ignore",
+    stderr: "inherit",
+  });
+  await tw.exited;
+  console.log("  Built Tailwind CSS");
+}
+
 // Build client bundles for hydration
 await buildDevClient();
 console.log(`  Built dev client (${Object.keys(clientManifest).length} entries)\n`);
@@ -122,6 +135,15 @@ console.log(`  Built dev client (${Object.keys(clientManifest).length} entries)\
 serve(async (req: ColocRequest, res: ColocResponse) => {
   if (req.url.pathname === "/__coloc/reload") {
     return createSSEResponse();
+  }
+
+  // Serve static files from public/
+  if (req.url.pathname.startsWith("/public/")) {
+    const fileName = req.url.pathname.replace("/public/", "");
+    const filePath = resolve(projectRoot, "public", fileName);
+    if (existsSync(filePath)) {
+      return new Response(Bun.file(filePath));
+    }
   }
 
   // Serve dev client bundles

@@ -81,11 +81,12 @@ export async function loader(req: ColocRequest) {
   return { title: "Example", items: [] as string[] };
 }
 
-// routes/example/page.tsx
-import type { PageProps } from "../../src/types.ts";
-import type { loader } from "./loader.ts";
+export type Props = Awaited<ReturnType<typeof loader>>;
 
-export default function ExamplePage({ title, items }: PageProps<typeof loader>) {
+// routes/example/page.tsx
+import type { Props } from "./loader.ts";
+
+export default function ExamplePage({ title, items }: Props) {
   // title is typed as string, items as string[]
   return <div><h1>{title}</h1></div>;
 }
@@ -162,7 +163,7 @@ CSRF token is automatically included. Actions without valid CSRF return 403.
 
 ## AI Optimization Features
 
-- **PageProps<typeof loader>** — type-safe connection between loader return type and page props
+- **`Props` type export** — loaders export their Props type, pages import with one line
 - **Route validation** — on dev startup, validates all routes and reports issues with fix suggestions
 - **`coloc routes`** — instant overview of all routes, loaders, actions, schemas
 - **`coloc new route`** — scaffolds route with correct imports and types pre-filled

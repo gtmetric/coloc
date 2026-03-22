@@ -30,7 +30,16 @@ export async function createApp(config: ColocConfig = {}) {
   await syncSchemas(routes);
 
   return serve(async (req: ColocRequest, res: ColocResponse) => {
-    // Serve static client bundles
+    // Serve static files from public/
+    if (req.url.pathname.startsWith("/public/")) {
+      const fileName = req.url.pathname.replace("/public/", "");
+      const filePath = resolve(projectRoot, "public", fileName);
+      if (existsSync(filePath)) {
+        return new Response(Bun.file(filePath));
+      }
+    }
+
+    // Serve client bundles
     if (req.url.pathname.startsWith("/static/")) {
       const clientDir = resolve(projectRoot, "dist/client");
       const fileName = req.url.pathname.replace("/static/", "");

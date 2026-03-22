@@ -85,22 +85,24 @@ Full Drizzle ORM — relations, joins, and type-safe queries all supported.
 
 ## Type-Safe Props
 
-Loader return types flow into page props automatically:
+Loaders export a `Props` type automatically. Pages import it with one line:
 
 ```tsx
 // loader.ts
 export async function loader(req) {
   return { count: 42 };
 }
+export type Props = Awaited<ReturnType<typeof loader>>;
 
 // page.tsx
-import type { PageProps } from "coloc";
-import type { loader } from "./loader";
+import type { Props } from "./loader";
 
-export default function MyPage({ count }: PageProps<typeof loader>) {
+export default function MyPage({ count }: Props) {
   // count is typed as number
 }
 ```
+
+The `Props` export is generated automatically by `coloc new route`.
 
 ## Interactive Pages
 
